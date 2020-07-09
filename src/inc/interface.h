@@ -387,11 +387,23 @@ extern void do_look_around(int descr, dbref player);
 extern int init_game(const char *infile, const char *outfile);
 extern void panic(const char *);
 int getUptime();
+void mssp_send(struct descriptor_data *d);
+int queue_ansi(struct descriptor_data *d, const char *msg);
+int process_output(struct descriptor_data *d);
+int process_input(struct descriptor_data *d);
+extern int queue_unhtml(struct descriptor_data *d, char *msg);
+extern char *grab_html(int nothtml, char *title);
+extern int queue_html(struct descriptor_data *d, char *msg);
 #ifdef USE_SSL
 extern SSL_CTX *ssl_ctx;
 extern SSL_CTX *ssl_ctx_client;
 #endif
-
+#ifdef MCCP_ENABLED
+void mccp_start(struct descriptor_data *d, int version);
+void mccp_end(struct descriptor_data *d);
+bool mccp_process_compressed(struct descriptor_data *d);
+#define UMIN(a,b) ((a)<(b)?(a):(b))
+#endif
 /* binding support */
 extern int bind_to;
 #ifdef IPV6
@@ -593,5 +605,13 @@ extern int udp_count;
 #endif
 
 #define TildeAnsiDigit(x)       (((x) == '-') || (((x) >= '0') && ((x) <= '9')))
+#define FREE(x) (free((void *) x))
+#define MALLOC(result, type, number) do {   \
+				       if (!((result) = (type *) malloc ((number) * sizeof (type)))) \
+				       panic("Out of memory");                             \
+				     } while (0)
+#ifdef MODULAR_SUPPORT
+extern struct module *modules;
+#endif
 
 #endif /* INTERFACE_H */

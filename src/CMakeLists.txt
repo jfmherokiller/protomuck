@@ -73,7 +73,7 @@ set(CSRC
         newhttp.c
         version.c
         sha1.c
-        )
+        other_interface_functions.c interface_module.c)
 include_directories(inc)
 find_package(OpenSSL REQUIRED)
 find_package(MySQL REQUIRED)
