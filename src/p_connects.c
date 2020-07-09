@@ -1237,8 +1237,8 @@ prim_getdescrinfo(PRIM_PROTOTYPE)
 	temp1.type = PROG_STRING;
     temp1.data.string = alloc_prog_string("TERMTYPE");
     temp2.type = PROG_STRING;
-	if (d->telopt.termtype)
-		temp2.data.string = alloc_prog_string(d->telopt.termtype);
+	if (d->mth->terminal_type)
+		temp2.data.string = alloc_prog_string(d->mth->terminal_type);
 	else
 		temp2.data.string = alloc_prog_string("<unknown>");
     array_setitem(&nw, &temp1, &temp2);
@@ -1299,7 +1299,7 @@ prim_getdescrinfo(PRIM_PROTOTYPE)
     temp1.type = PROG_STRING;
     temp1.data.string = alloc_prog_string("WIDTH");
     temp2.type = PROG_INTEGER;
-    curLen = (int) d->telopt.width;
+    curLen = (int) d->mth->rows;
     temp2.data.number = curLen;
     array_setitem(&nw, &temp1, &temp2);
     CLEAR(&temp1);
@@ -1307,7 +1307,7 @@ prim_getdescrinfo(PRIM_PROTOTYPE)
     temp1.type = PROG_STRING;
     temp1.data.string = alloc_prog_string("HEIGHT");
     temp2.type = PROG_INTEGER;
-    curLen = (int) d->telopt.height;
+    curLen = (int) d->mth->cols;
     temp2.data.number = curLen;
     array_setitem(&nw, &temp1, &temp2);
     CLEAR(&temp1);
