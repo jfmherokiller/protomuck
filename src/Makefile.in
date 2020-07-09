@@ -86,7 +86,7 @@ CSRC= array.c boolexp.c cgi.c compile.c compress.c create.c db.c  \
       timestamp.c tune.c unparse.c utils.c wiz.c reg.c netresolve.c      \
       sanity.c newhttp.c version.c sha1.c
 
-MSRC= olddecomp.c reconst.c interface.c
+MSRC= olddecomp.c reconst.c interface.c other_interface_functions.c interface_module.c
 SRC= ${MISCSRC} ${CSRC} ${MSRC}
 
 COBJ=  array.o boolexp.o cgi.o compile.o compress.o create.o db.o  \
@@ -103,7 +103,7 @@ COBJ=  array.o boolexp.o cgi.o compile.o compress.o create.o db.o  \
       sha1.o
 
 LOBJ= copyright.o
-MOBJ= olddecomp.o reconst.o interface.o resolver.o topwords.o 
+MOBJ= olddecomp.o reconst.o interface.o resolver.o topwords.o other_interface_functions.o interface_module.o
 EOBJ= oldcompress.o diskprop.o property.o propdirs.o props.o stringutil.o \
 	unparse.o utils.o predicates.o db.o boolexp.o log.o
 
@@ -119,15 +119,15 @@ all:    ${TARGETS}
 
 muck:	protomuck
 
-protomuck:        ${P} ${COBJ} interface.o
+protomuck:        ${P} ${COBJ} interface.o other_interface_functions.o interface_module.o
 	${MV} protomuck protomuck~
 	@echo "`bash -c set | grep OSTYPE`"
 	@if [ "`bash -c set | grep OSTYPE`" = "OSTYPE=cygwin" ]; then \
          echo ${PRE} ${CC} -Wl,--heap,268435456,--stack,16777216 ${CFLAGS} -o protomuck ${COBJ} interface.o ${LIBR}; \
-	 ${PRE} ${CC} -Wl,--heap,268435456,--stack,16777216 ${XXCFLAGS} -o protomuck ${COBJ} interface.o ${LIBR}; \
+	 ${PRE} ${CC} -Wl,--heap,268435456,--stack,16777216 ${XXCFLAGS} -o protomuck ${COBJ} interface.o other_interface_functions.o interface_module.o ${LIBR}; \
 	else \
          echo ${PRE} ${CC} ${CFLAGS} -o protomuck ${COBJ} interface.o ${LIBR}; \
-	 ${PRE} ${CC} ${CFLAGS} -o protomuck ${COBJ} interface.o ${LIBR}; \
+	 ${PRE} ${CC} ${CFLAGS} -o protomuck ${COBJ} interface.o other_interface_functions.o interface_module.o ${LIBR}; \
 	fi
 
 protomuck.debug:    protomuck
