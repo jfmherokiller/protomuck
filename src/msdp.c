@@ -22,13 +22,13 @@ void init_msdp_table(void)
 {
 	int index;
 
-	for (index = 0 ; *msdp_table[index].name ; index++)
+	for (index = 0; *msdp_table[index].name ; index++)
 	{
 		if (strcmp(msdp_table[index].name, msdp_table[index+1].name) > 0)
 		{
 			if (*msdp_table[index+1].name)
 			{
-				log_printf("\e[31minit_msdp_table: Improperly sorted variable: %s.\e0m", msdp_table[index+1].name);
+                printf("\e[31minit_msdp_table: Improperly sorted variable: %s.\e0m", msdp_table[index+1].name);
 			}
 		}
 	}
@@ -83,7 +83,7 @@ void msdp_update_all(char *var, char *fmt, ...)
 
 void msdp_update_var(DESCRIPTOR_DATA *d, char *var, char *fmt, ...)
 {
-	char buf[MAX_COMMAND_LEN];
+	char buf[MAX_INPUT_LENGTH];
 	int index;
 	va_list args;
 
@@ -96,7 +96,7 @@ void msdp_update_var(DESCRIPTOR_DATA *d, char *var, char *fmt, ...)
 
 	if (index == -1)
 	{
-		log_printf("msdp_update_var: Unknown variable: %s.", var);
+		printf("msdp_update_var: Unknown variable: %s.", var);
 
 		return;
 	}
@@ -133,7 +133,7 @@ void msdp_update_var_instant(DESCRIPTOR_DATA *d, char *var, char *fmt, ...)
 
 	if (index == -1)
 	{
-		log_printf("msdp_update_var_instant: Unknown variable: %s.", var);
+		printf("msdp_update_var_instant: Unknown variable: %s.", var);
 
 		return;
 	}
@@ -208,7 +208,7 @@ char *msdp_get_var(DESCRIPTOR_DATA *d, char *var)
 
 	if (index == -1)
 	{
-		log_printf("msdp_get_var: Unknown variable: %s.", var);
+		printf("msdp_get_var: Unknown variable: %s.", var);
 
 		return NULL;
 	}

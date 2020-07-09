@@ -378,6 +378,94 @@ extern void free_compress_dictionary(void);
 #endif /* COMPRESS */
 #endif /* MALLOC_PROFILING */
 
+void GotRestartFlag(int i);
+
+void ProcessArguments(int argc, char **argv, int *i, int *sanity_skip, int *sanity_interactive, int *sanity_autofix,
+                      char **infile_name, char **outfile_name, int *nomore_options, char **num_one_new_passwd,
+                      int *resolver_myport) {
+    int innerI = *i;
+    if (!strcmp(argv[innerI], "-convert")) {
+        db_conversion_flag = 1;
+    } else if (!strcmp(argv[innerI], "-decompress")) {
+        db_decompression_flag = 1;
+    } else if (!strcmp(argv[innerI], "-nosanity")) {
+        *sanity_skip = 1;
+    } else if (!strcmp(argv[innerI], "-verboseload")) {
+        verboseload = 1;
+    } else if (!strcmp(argv[innerI], "-insanity")) {
+        *sanity_interactive = 1;
+    } else if (!strcmp(argv[innerI], "-wizonly")) {
+        wizonly_mode = 1;
+    } else if (!strcmp(argv[innerI], "-sanfix")) {
+        *sanity_autofix = 1;
+    } else if (!strcmp(argv[innerI], "-pwconvert")) {
+        db_hash_convert = 1;
+    } else if (!strcmp(argv[innerI], "-version")) {
+        printf("ProtoMUCK %s (%s -- %s)\n", PROTOBASE, VERSION,
+               NEONVER);
+        exit(0);
+    } else if (!strcmp(argv[innerI], "-dbin")) {
+        if (innerI + 1 >= argc) {
+            show_program_usage(*argv);
+        }
+        *infile_name = argv[++innerI];
+
+    } else if (!strcmp(argv[innerI], "-dbout")) {
+        if (innerI + 1 >= argc) {
+            show_program_usage(*argv);
+        }
+        *outfile_name = argv[++innerI];
+
+    } else if (!strcmp(argv[innerI], "-godpasswd")) {
+        if (innerI + 1 >= argc) {
+            show_program_usage(*argv);
+        }
+        *num_one_new_passwd = argv[++innerI];
+        if (!ok_password(*num_one_new_passwd)) {
+            fprintf(stderr, "Bad -godpasswd password.\n");
+            exit(1);
+        }
+        db_conversion_flag = 1;
+
+    } else if (!strcmp(argv[innerI], "-port")) {
+        if (innerI + 1 >= argc) {
+            show_program_usage(*argv);
+        }
+        *resolver_myport = atoi(argv[++innerI]);
+    } else if (!strcmp(argv[innerI], "-bind")) {
+        if (innerI + 1 >= argc) {
+            show_program_usage(*argv);
+        }
+        bind_to = str2ip(argv[++innerI]);
+        if (bind_to == -1) {
+            bind_to = INADDR_ANY;
+        } else {
+            bind_to = ntohl(bind_to);
+        }
+#ifdef IPV6
+    } else if (!strcmp(argv[innerI], "-bind6")) {
+        if (innerI + 1 >= argc) {
+            show_program_usage(*argv);
+        }
+        bind6 = str2ip6(argv[++innerI]);
+#endif
+#ifndef WIN_VC
+    } else if (!strcmp(argv[innerI], "-gamedir")) {
+        if (innerI + 1 >= argc) {
+            show_program_usage(*argv);
+        }
+        if (chdir(argv[++innerI])) {
+            perror("cd to gamedir");
+            exit(4);
+        }
+#endif
+    } else if (!strcmp(argv[innerI], "--")) {
+        *nomore_options = 1;
+    } else {
+        show_program_usage(*argv);
+    }
+}
+
 int
 main(int argc, char **argv)
 {
@@ -432,86 +520,8 @@ main(int argc, char **argv)
 #endif /* USE_PS */
     for (i = 1; i < argc; i++) {
         if (!nomore_options && argv[i][0] == '-') {
-            if (!strcmp(argv[i], "-convert")) {
-                db_conversion_flag = 1;
-            } else if (!strcmp(argv[i], "-decompress")) {
-                db_decompression_flag = 1;
-            } else if (!strcmp(argv[i], "-nosanity")) {
-                sanity_skip = 1;
-            } else if (!strcmp(argv[i], "-verboseload")) {
-                verboseload = 1;
-            } else if (!strcmp(argv[i], "-insanity")) {
-                sanity_interactive = 1;
-            } else if (!strcmp(argv[i], "-wizonly")) {
-                wizonly_mode = 1;
-            } else if (!strcmp(argv[i], "-sanfix")) {
-                sanity_autofix = 1;
-            } else if (!strcmp(argv[i], "-pwconvert")) {
-                db_hash_convert = 1;
-            } else if (!strcmp(argv[i], "-version")) {
-                printf("ProtoMUCK %s (%s -- %s)\n", PROTOBASE, VERSION,
-                       NEONVER);
-                exit(0);
-            } else if (!strcmp(argv[i], "-dbin")) {
-                if (i + 1 >= argc) {
-                    show_program_usage(*argv);
-                }
-                infile_name = argv[++i];
-
-            } else if (!strcmp(argv[i], "-dbout")) {
-                if (i + 1 >= argc) {
-                    show_program_usage(*argv);
-                }
-                outfile_name = argv[++i];
-
-            } else if (!strcmp(argv[i], "-godpasswd")) {
-                if (i + 1 >= argc) {
-                    show_program_usage(*argv);
-                }
-                num_one_new_passwd = argv[++i];
-                if (!ok_password(num_one_new_passwd)) {
-                    fprintf(stderr, "Bad -godpasswd password.\n");
-                    exit(1);
-                }
-                db_conversion_flag = 1;
-
-            } else if (!strcmp(argv[i], "-port")) {
-                if (i + 1 >= argc) {
-                    show_program_usage(*argv);
-                }
-                resolver_myport = atoi(argv[++i]);
-            } else if (!strcmp(argv[i], "-bind")) {
-                if (i + 1 >= argc) {
-                    show_program_usage(*argv);
-                }
-                bind_to = str2ip(argv[++i]);
-                if (bind_to == -1) {
-                    bind_to = INADDR_ANY;
-                } else {
-                    bind_to = ntohl(bind_to);
-                }
-#ifdef IPV6
-            } else if (!strcmp(argv[i], "-bind6")) {
-                if (i + 1 >= argc) {
-                    show_program_usage(*argv);
-                }
-                bind6 = str2ip6(argv[++i]);
-#endif
-#ifndef WIN_VC
-            } else if (!strcmp(argv[i], "-gamedir")) {
-                if (i + 1 >= argc) {
-                    show_program_usage(*argv);
-                }
-                if (chdir(argv[++i])) {
-                    perror("cd to gamedir");
-                    exit(4);
-                }
-#endif
-            } else if (!strcmp(argv[i], "--")) {
-                nomore_options = 1;
-            } else {
-                show_program_usage(*argv);
-            }
+            ProcessArguments(argc, argv, &i, &sanity_skip, &sanity_interactive, &sanity_autofix, &infile_name,
+                             &outfile_name, &nomore_options, &num_one_new_passwd, &resolver_myport);
         } else {
             if (!infile_name) {
                 infile_name = argv[i];
@@ -547,22 +557,22 @@ main(int argc, char **argv)
 
 #ifndef WIN_VC
 #ifdef UTF8_SUPPORT
-    if (!setlocale(LC_CTYPE, "en_US.UTF-8")) {
-        fprintf(stdout, "Unable to change locale to UTF-8, aborting.\n");
-        fprintf(stdout, "Make sure your OS supports it!\n");
-        exit(1);
-    }
+        if (!setlocale(LC_CTYPE, "en_US.UTF-8")) {
+            fprintf(stdout, "Unable to change locale to UTF-8, aborting.\n");
+            fprintf(stdout, "Make sure your OS supports it!\n");
+            exit(1);
+        }
 #ifndef LEGACY_COLLATION
-    /* Setting LC_COLLATE to UTF-8 mode will confuse some people, i.e. "foobar"
-     * will sort before ".foobar" and ".foobar" will sort before "foobaz". This
-     * only effects the sorting of the standard library, it doesn't change any
-     * of the manual sorting that we do. (i.e. prop ordering in examine) */
-    if (!setlocale(LC_COLLATE, "en_US.UTF-8")) {
-        fprintf(stdout, "Unable to change collation order to en_US.UTF-8!.\n");
-        fprintf(stdout, "Changing LC_CTYPE to en_US.UTF-8 succeeded though, weird.\n");
-        fprintf(stdout, "E-mail this error to davin@protomuck.org.\n");
-        exit(1);
-    }
+        /* Setting LC_COLLATE to UTF-8 mode will confuse some people, i.e. "foobar"
+         * will sort before ".foobar" and ".foobar" will sort before "foobaz". This
+         * only effects the sorting of the standard library, it doesn't change any
+         * of the manual sorting that we do. (i.e. prop ordering in examine) */
+        if (!setlocale(LC_COLLATE, "en_US.UTF-8")) {
+            fprintf(stdout, "Unable to change collation order to en_US.UTF-8!.\n");
+            fprintf(stdout, "Changing LC_CTYPE to en_US.UTF-8 succeeded though, weird.\n");
+            fprintf(stdout, "E-mail this error to davin@protomuck.org.\n");
+            exit(1);
+        }
 #endif /* LEGACY_COLLATION */
 #endif /* UTF8_SUPPORT */
 
@@ -774,9 +784,11 @@ main(int argc, char **argv)
                 }
             }
         }
-
+        init_mth();
+        //gameloop is in this function
         /* go do it */
         shovechars();
+        //if that function returns begin host shutdown
 
         if (restart_flag) {
             close_sockets(restart_message);
@@ -792,6 +804,7 @@ main(int argc, char **argv)
     if (sanity_interactive) {
         san_main();
     } else {
+        //shut down server portion starts here
         dump_database(0);
         tune_save_parmsfile();
 
@@ -836,31 +849,35 @@ main(int argc, char **argv)
         CrT_summarize_to_file("malloc_log", "Shutdown");
 #endif
 
-        if (restart_flag) {
-            char portlist[BUFFER_LEN];
-            char numbuf[16];
-
-            portlist[0] = '\0';
-            for (i = 0; i < numsocks; i++) {
-                if ((listener_port[i] != tp_textport)
-#ifdef NEWHTTPD                 /* hinoserm */
-                    && (listener_port[i] != tp_wwwport) /* hinoserm */
-#endif /* hinoserm */
-                    && (listener_port[i] != tp_puebloport)) {
-                    sprintf(numbuf, "%d", listener_port[i]);
-                    if (*portlist) {
-                        strcat(portlist, " ");
-                    }
-                    strcat(portlist, numbuf);
-                }
-            }
-            execl("restart", "restart", portlist, (char *) 0);
-        }
+        GotRestartFlag(i);
     }
 
     exit(0);
 
     return (0);
+}
+
+void GotRestartFlag(int i) {
+    if (restart_flag) {
+        char portlist[BUFFER_LEN];
+        char numbuf[16];
+
+        portlist[0] = '\0';
+        for (i = 0; i < numsocks; i++) {
+            if ((listener_port[i] != tp_textport)
+                #ifdef NEWHTTPD                 /* hinoserm */
+                && (listener_port[i] != tp_wwwport) /* hinoserm */
+                #endif /* hinoserm */
+                && (listener_port[i] != tp_puebloport)) {
+                sprintf(numbuf, "%d", listener_port[i]);
+                if (*portlist) {
+                    strcat(portlist, " ");
+                }
+                strcat(portlist, numbuf);
+            }
+        }
+        execl("restart", "restart", portlist, (char *) 0);
+    }
 }
 
 #endif /* BOOLEXP_DEBUGGING */
@@ -1482,8 +1499,7 @@ notify_html_from(dbref from, dbref player, const char *msg)
 
 
 int
-notify(dbref player, const char *msg)
-{
+notify(dbref player, const char *msg) {
     return notify_from_echo(player, player, msg, 1);
 }
 
@@ -1758,7 +1774,7 @@ void *threaded_output_handler(void *ptr)
 			else if (d->mccp && COMPRESS_BUF_SIZE - d->mccp->z->avail_out)
 				FD_SET(d->descriptor, &output_set);
 #endif
-			
+
 #ifdef USE_SSL
 			if (d->ssl_session) {
 				/* SSL may want to write even if the output queue is empty */
@@ -2747,12 +2763,12 @@ host_as_hex(                    /* CrT */
 }
 
 #ifdef IPV6
-struct in6_addr 
+struct in6_addr
 str2ip6(const char *ipstr)
 {
     struct in6_addr x;
     inet_pton(AF_INET6, ipstr, &x);
-    return x; 
+    return x;
 }
 #endif
 int
@@ -2832,7 +2848,7 @@ new_connection6(int port, int sock)
     int ctype;
     int result;
     struct huinfo *hu;
-    
+
     addr_len = sizeof(addr);
     newsock = accept(sock, (struct sockaddr *) &addr, (socklen_t *) &addr_len);
     ctype = get_ctype(port);
@@ -2908,7 +2924,7 @@ new_connection(int port, int sock)
     int ctype;
     int result;
     struct huinfo *hu;
-    
+
     addr_len = sizeof(addr);
     newsock = accept(sock, (struct sockaddr *) &addr, (socklen_t *) &addr_len);
     ctype = get_ctype(port);
@@ -3007,6 +3023,7 @@ shutdownsock(struct descriptor_data *d)
                         d->hu->u->user, host_as_hex(d->hu->h->a), d->commands,
                         d->cport);
             announce_disconnect(d);
+            uninit_mth_socket(d);
         } else if (d->type != CT_INBOUND) {
             show_status("DISC: %2d %s(%s) %s, %d cmds P#%d (never connected)\n",
                         d->descriptor, d->hu->h->name, d->hu->u->user,
@@ -3197,13 +3214,14 @@ initializesock(int s, struct huinfo *hu, int ctype, int cport, int welcome)
 #ifdef NEWHTTPD
         && ctype != CT_HTTP
 #endif /* NEWHTTPD */
-        ) {
-        queue_write(d, "\xFF\xFB\x46",       3); /* IAC WILL MSSP */
-        queue_write(d, "\377\373\126\012",   4); /* IAC WILL TELOPT_COMPRESS2 (MCCP v2) */
-        queue_write(d, "\xFF\xFD\x18",       3); /* IAC DO TERMTYPE */
-        queue_write(d, "\xFF\xFD\x1F",       3); /* IAC DO NAWS */
-        queue_write(d, "\xFF\xFD\052",       3); /* IAC DO CHARSET */
-        announce_login(d); 
+            ) {
+        init_mth_socket(d);
+        //queue_write(d, "\xFF\xFB\x46",       3); /* IAC WILL MSSP */
+        //queue_write(d, "\377\373\126\012",   4); /* IAC WILL TELOPT_COMPRESS2 (MCCP v2) */
+        //queue_write(d, "\xFF\xFD\x18",       3); /* IAC DO TERMTYPE */
+        //queue_write(d, "\xFF\xFD\x1F",       3); /* IAC DO NAWS */
+        //queue_write(d, "\xFF\xFD\052",       3); /* IAC DO CHARSET */
+        announce_login(d);
         welcome_user(d);
     }
     return d;
@@ -3256,7 +3274,7 @@ make_socket6(int port)
 
     inet_ntop(AF_INET6, bind6.s6_addr, ip, INET_ADDRSTRLEN);
 
-    log_status("IPv6 address: %.2x%.2x:%.2x%.2x:%.2x%.2x:%.2x%.2x:%.2x%.2x:%.2x%.2x:%.2x%.2x:%.2x%.2x\n", 
+    log_status("IPv6 address: %.2x%.2x:%.2x%.2x:%.2x%.2x:%.2x%.2x:%.2x%.2x:%.2x%.2x:%.2x%.2x:%.2x%.2x\n",
 		bind6.s6_addr[0], bind6.s6_addr[1], bind6.s6_addr[2], bind6.s6_addr[3],
 		bind6.s6_addr[4], bind6.s6_addr[5], bind6.s6_addr[6], bind6.s6_addr[7],
 		bind6.s6_addr[8], bind6.s6_addr[9], bind6.s6_addr[10], bind6.s6_addr[11],
@@ -3399,7 +3417,7 @@ queue_string(struct descriptor_data *d, const char *s)
 		/* each invalid byte of s potentially maps to three UTF-8 bytes */
 		wchar_t wctmp;
 		int wclen;
-        
+
         filtered = (char *) malloc( (len*3) + 1);
         fp = filtered;
         fend = filtered + (len*3);
@@ -3672,6 +3690,7 @@ process_input(struct descriptor_data *d)
         wcbuflen = d->raw_input_wclen;
 #endif
     }
+    translate_telopts(d, (unsigned char *) buf, got, (unsigned char *) d->raw_input, d->input_len); // MTH 1.5
     p = d->raw_input_at;
     pend = d->raw_input + MAX_COMMAND_LEN - 1;
     for (q = buf, qend = buf + got; q < qend; q++) {
@@ -3899,9 +3918,9 @@ process_input(struct descriptor_data *d)
             }
         } else if (d->inIAC == 2) { /* WILL */
             if (*q == TELOPT_TERMTYPE) { /* TERMTYPE */
-                queue_write(d, "\xFF\xFA\x18\x01\xFF\xF0", 6); /* IAC SB TERMTYPE SEND IAC SE */
+                //queue_write(d, "\xFF\xFA\x18\x01\xFF\xF0", 6); /* IAC SB TERMTYPE SEND IAC SE */
             } else if (*q == TELOPT_MSSP) {
-                mssp_send(d);
+                //mssp_send(d);
             } else if (*q == TELOPT_NAWS) {
                 /* queue_write(d, "\xFF\xFD\x1F", 3); */ /* Oops, infinite loop */
             } else if (*q == TELOPT_CHARSET) {
@@ -3909,15 +3928,15 @@ process_input(struct descriptor_data *d)
                 /* Just have to wait for the DO now. */
             } else {
                 /* send back DONT option in all other cases */
-                queue_write(d, "\377\376", 2);
-                queue_write(d, q, 1);
+                //queue_write(d, "\377\376", 2);
+                //queue_write(d, q, 1);
             }
             d->inIAC = 0;
         } else if (d->inIAC == TELOPT_DO) {
 #ifdef MCCP_ENABLED
             if (*q == TELOPT_MCCP2) {        /* TELOPT_COMPRESS2 */
                 d->telopt.mccp = 2;
-					
+
                 /* Thanks to SimpleMU, we're required to know the termtype before we can enable MCCP. */
                 if (d->telopt.termtype && !d->mccp)
                     mccp_start(d, d->telopt.mccp);
@@ -3929,8 +3948,8 @@ process_input(struct descriptor_data *d)
             //    queue_write(d, "UTF-8\xFC", 6);
             } else {
                 /* Send back WONT in all cases */
-                queue_write(d, "\377\xFC", 2);
-                queue_write(d, q, 1);
+                //queue_write(d, "\377\xFC", 2);
+                //queue_write(d, q, 1);
             }
 #else
             queue_write(d, "\377\374", 2);
@@ -3947,8 +3966,8 @@ process_input(struct descriptor_data *d)
             } else if (*q == TELOPT_NAWS) {
             } else {
                 /* Send back WONT in all cases */
-                queue_write(d, "\377\xFC", 2);
-                queue_write(d, q, 1);
+                //queue_write(d, "\377\xFC", 2);
+                //queue_write(d, q, 1);
             }
 #else
 			queue_write(d, "\377\374", 2);
@@ -4598,6 +4617,7 @@ check_connect(struct descriptor_data *d, const char *msg)
         welcome_user(d);
     }
 }
+
 void
 parse_connect(const char *msg, char *command, char *user, char *pass)
 {
@@ -4624,13 +4644,13 @@ parse_connect(const char *msg, char *command, char *user, char *pass)
         if ( *msg && ++cnt < 80 && ( *msg == '\'' || *msg == '\"' ) ){
             bInQuotes = 1;
             msg++; /* Move past the quote */
-        }  
+        }
         if ( bInQuotes ){
-            while (*msg && isascii(*msg) && ++cnt < BUFFER_LEN && 
-                   !(*msg == '\'' || *msg == '\"' )) 
+            while (*msg && isascii(*msg) && ++cnt < BUFFER_LEN &&
+                   !(*msg == '\'' || *msg == '\"' ))
                 *p++ = *msg++;
             msg++; /* Move past the ending quote */
-            *p = '\0';  
+            *p = '\0';
         }
         else {
             /* Unquoted name, just treat as normal */
@@ -4654,10 +4674,10 @@ parse_connect(const char *msg, char *command, char *user, char *pass)
                space in the input. Everything in msg before it
                is name, everything after it is password */
             msg = start;
-            cnt = 0; 
+            cnt = 0;
             /* copying over name */
             while (*msg && isascii(*msg) && cnt < lastSpace) {
-                *p = *msg;    
+                *p = *msg;
                 ++msg;
                 ++p;
                 ++cnt;
@@ -4892,9 +4912,9 @@ do_dinfo(dbref player, const char *arg)
         /* need to print out the flags */
         anotify_nolisten(player, descr_flag_description(d->descriptor), 1);
 
-	anotify_fmt(player, SYSAQUA "Termtype: " SYSCYAN "%s    Encoding: %s", 
-	    (d->telopt.termtype ? d->telopt.termtype : "<unknown>"),
-	    (d->encoding ? (d->encoding==1 ? "ASCII-7" : "UTF-8") : "RAW" ));
+    anotify_fmt(player, SYSAQUA "Termtype: " SYSCYAN "%s    Encoding: %s",
+                (d->mth->terminal_type ? d->mth->terminal_type : "<unknown>"),
+                (d->encoding ? (d->encoding == 1 ? "ASCII-7" : "UTF-8") : "RAW"));
 
     if (Arch(player))
         anotify_fmt(player, SYSAQUA "Host: " SYSCYAN "%s" SYSBLUE "@"
@@ -5078,6 +5098,8 @@ dump_users(struct descriptor_data *d, char *user)
 
     if (!d)
         return;
+    }
+
 
     if (!(OkObj(d->player) && d->connected) && tp_secure_who) {
         queue_ansi(d, SYSRED "Login and find out!");
@@ -5096,7 +5118,7 @@ dump_users(struct descriptor_data *d, char *user)
     while (*user && isspace(*user))
         user++;
 
-    /* I must apologize for the absurd logical check below 
+    /* I must apologize for the absurd logical check below
      * In fixing EXPANDED_WHO, I didn't feel like rewriting
      * the already badly done logic check.
      */
@@ -6474,7 +6496,7 @@ pset_user_suid(int c, dbref who)
 	silent_disconnect(d);
 	transfer_descr_to_player(d->descriptor, d->player, who);
     }
-    
+
     d->player = who;
     silent_connect(d->descriptor, who);
     total_loggedin_connects++;
@@ -6788,8 +6810,8 @@ void propagate_descr_flag(dbref player, object_flag_type flag, int set)
     struct descriptor_data *d = NULL;
     int *darr = NULL;
     int dcount = 0;
-    int i = 0;  
-    
+    int i = 0;
+
     darr = get_player_descrs(player, &dcount);
     for (i = 0; i < dcount; ++i ) {
         d = descrdata_by_index(darr[i]);
@@ -7184,7 +7206,7 @@ mssp_send(struct descriptor_data *d)
 
     if (!sent_mccp) {
 #ifdef MCCP_ENABLED
-        sprintf(buf, "\x01%s\x02%d", "MCCP", 1);  
+        sprintf(buf, "\x01%s\x02%d", "MCCP", 1);
 #else
         sprintf(buf, "\x01%s\x02%d", "MCCP", 0);
 #endif
@@ -7192,6 +7214,10 @@ mssp_send(struct descriptor_data *d)
     }
 
     queue_write(d, "\xFF\xF0", 2);
+}
+
+int getUptime() {
+    return (int) startup_systime;
 }
 
 #ifdef MODULAR_SUPPORT
@@ -7220,7 +7246,7 @@ module_load(const char *filename, dbref who)
 
 	if (!m->handle && (error = dlerror()) != NULL) {
 		free((void *)m);
-		log_status("MODULE_LOAD(%s): ERROR %s\r\n", filename, error); 
+		log_status("MODULE_LOAD(%s): ERROR %s\r\n", filename, error);
 		return error;
 	}
 
@@ -7260,14 +7286,14 @@ module_load(const char *filename, dbref who)
 	}
 
 	/* for (i = 0; mr->info->requires[i].name; i++) {
-		
+
 	} */
 
 
 	m->prims = NULL;
 	func = dlsym(m->handle, "__get_prim_list");
 
-	if ((error = dlerror()) == NULL)  {	
+	if ((error = dlerror()) == NULL)  {
 		m->prims = (*func)();
 
 		if (m->prims) {
@@ -7324,7 +7350,7 @@ module_free(struct module *m)
 		m->prev->next = m->next;
 	if (m == modules)
 		modules = m->next;
-	
+
 	log_status("MODULE: Free'd %s.\r\n", m->info->name);
 	dlclose(m->handle);
 	free((void *)m);

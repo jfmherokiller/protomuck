@@ -386,7 +386,7 @@ extern void do_look_around(int descr, dbref player);
 
 extern int init_game(const char *infile, const char *outfile);
 extern void panic(const char *);
-
+int getUptime();
 #ifdef USE_SSL
 extern SSL_CTX *ssl_ctx;
 extern SSL_CTX *ssl_ctx_client;

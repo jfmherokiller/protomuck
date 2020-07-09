@@ -20,19 +20,11 @@
  * for routines described in string(3).
  */
 
-/*
-char	*strcat();
-char	*strncat();
-int	strcmp();
-int	strncmp();
-int	strcasecmp();
-int	strncasecmp();
-char	*strcpy();
-char	*strncpy();
-int	strlen();
-char	*index();
-char	*rindex();
-*/
+
+
+extern int	strcasecmp(const char* input,const char* SecondInput);
+extern int	strncasecmp(const char* input,const char* SecondInput,unsigned long cool);
+
 
 extern const char *strencrypt(const char *data, const char *key);
 extern const char *strdecrypt(const char *data, const char *key);
@@ -44,3 +36,4 @@ extern int base64tohex(char *dest, int olen, const char *orig, int ilen);
 extern int hextobase64(char *dest, int olen, const char *orig, int ilen);
 extern int strtohex(char *dest, int olen, const char *orig, int ilen);
 extern int hextostr(char *dest, int olen, const char *orig, int ilen);
+void StringCopy(char* input,char* output);

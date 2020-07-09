@@ -1,14 +1,14 @@
+#include <zlib.h>
 
-
-typedef struct mth_data           MTH_DATA;
-typedef struct mud_data           MUD_DATA;
+typedef struct mth_data MTH_DATA;
+typedef struct mud_data MUD_DATA;
 
 /*
 	Utility macros.
 */
 
 #define HAS_BIT(var, bit)       ((var)  & (bit))
-#define SET_BIT(var, bit)	((var) |= (bit))
+#define SET_BIT(var, bit)    ((var) |= (bit))
 #define DEL_BIT(var, bit)       ((var) &= (~(bit)))
 #define TOG_BIT(var, bit)       ((var) ^= (bit))
 
@@ -18,26 +18,44 @@ typedef struct mud_data           MUD_DATA;
 
 #define RESTRING(point, value) \
 { \
-	STRFREE(point); \
-	point = strdup(value); \
+    StringCopy(value,point); \
 }
 
 #define STRALLOC(point) \
 { \
-	point = strdup(value); \
+    point = strdup(value); \
 }
 
 #define STRFREE(point) \
 { \
-	free(point); \
-	point = NULL; \
-} 
+    free(point); \
+    point = NULL; \
+}
 
 /*
 	Typedefs
 */
+/*
+	Typedefs
+*/
+typedef struct mth_data MTH_DATA;
+typedef struct mud_data MUD_DATA;
+typedef struct descriptor_data DESCRIPTOR_DATA;
 
-typedef struct descriptor_data    DESCRIPTOR_DATA;
+//#define MUD_PORT                           4321
+//#define MAX_SKILL                           269
+//#define MAX_CLASS                             8
+//#define MAX_RACE                             16
+//#define MAX_LEVEL                            99
+
+#define MAX_INPUT_LENGTH                   2000
+#define MAX_STRING_LENGTH                 12000 // Must be at least 6 times larger than max input length.
+#define COMPRESS_BUF_SIZE                 10000
+
+#define FALSE                                 0
+#define TRUE                                  1
+
+typedef struct descriptor_data DESCRIPTOR_DATA;
 
 #define BV00            (0   <<  0)
 #define BV01            (1   <<  0)
@@ -84,165 +102,90 @@ typedef struct descriptor_data    DESCRIPTOR_DATA;
 	Mud data, structure containing global variables.
 */
 
-struct mud_data
-{
-	DESCRIPTOR_DATA     * client;
-	int                   server;
-	int                   boot_time;
-	int                   port;
-	int                   total_plr;
-	int                   top_area;
-	int                   top_help;
-	int                   top_mob_index;
-	int                   top_obj_index;
-	int                   top_room;
-	int                   msdp_table_size;
-	int                   mccp_len;
-	unsigned char       * mccp_buf;
+struct mud_data {
+    DESCRIPTOR_DATA *client;
+    int server;
+    int boot_time;
+    int port;
+    int total_plr;
+    int top_area;
+    int top_help;
+    int top_mob_index;
+    int top_obj_index;
+    int top_room;
+    int msdp_table_size;
+    int mccp_len;
+    unsigned char *mccp_buf;
 };
 
-struct mth_data
-{
-	struct msdp_data ** msdp_data;
-	char              * proxy;
-	char              * terminal_type;
-	char                telbuf[MAX_COMMAND_LEN];
-	int                 teltop;
-	long long           mtts;
-	int                 comm_flags;
-	short               cols;
-	short               rows;
-	z_stream          * mccp2;
-	z_stream          * mccp3;
+struct mth_data {
+    struct msdp_data **msdp_data;
+    char *proxy;
+    char *terminal_type;
+    char telbuf[MAX_INPUT_LENGTH];
+    int teltop;
+    long long mtts;
+    int comm_flags;
+    short cols;
+    short rows;
+    z_stream *mccp2;
+    z_stream *mccp3;
 };
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <errno.h>
-#include <ctype.h>
-#include <time.h>
-#include <zlib.h>
-#include <stdarg.h>
-
-
-/*
-	Utility macros.
-*/
-
-#define HAS_BIT(var, bit)       ((var)  & (bit))
-#define SET_BIT(var, bit)	((var) |= (bit))
-#define DEL_BIT(var, bit)       ((var) &= (~(bit)))
-#define TOG_BIT(var, bit)       ((var) ^= (bit))
-
-/*
-	Update these to use whatever your MUD uses
-*/
-
-#define RESTRING(point, value) \
-{ \
-	STRFREE(point); \
-	point = strdup(value); \
-}
-
-#define STRALLOC(point) \
-{ \
-	point = strdup(value); \
-}
-
-#define STRFREE(point) \
-{ \
-	free(point); \
-	point = NULL; \
-}
-
-/*
-	Typedefs
-*/
-typedef struct mth_data           MTH_DATA;
-typedef struct mud_data           MUD_DATA;
-typedef struct descriptor_data    DESCRIPTOR_DATA;
-
-//#define MUD_PORT                           4321
-//#define MAX_SKILL                           269
-//#define MAX_CLASS                             8
-//#define MAX_RACE                             16
-//#define MAX_LEVEL                            99
-
-#define MAX_INPUT_LENGTH                   2000
-#define MAX_STRING_LENGTH                 12000 // Must be at least 6 times larger than max input length.
-#define COMPRESS_BUF_SIZE                 10000
-
-#define FALSE                                 0
-#define TRUE                                  1
-
-/*
-	Descriptor (channel)
-*/
-/* Descriptor (channel) structure. */
-struct descriptor_data2 {
-    DESCRIPTOR_DATA *next;
-    DESCRIPTOR_DATA *snoop_by;
-    void *character;
-    void *original;
-    MTH_DATA *mth; // MTH 1.5
-    int ansi;
-    char *host;
-    short descriptor;
-    short connected;
-    int fcommand;
-    char inbuf[MAX_INPUT_LENGTH];
-    char incomm[MAX_INPUT_LENGTH];
-    char inlast[MAX_INPUT_LENGTH];
-    int repeat;
-    char *outbuf;
-    int outsize;
-    int outtop;
-    char *showstr_head;
-    char *showstr_point;
-    int lines_written; /* for the pager */
-    void *pEdit;    /* OLC */
-    char **pString; /* OLC */
-    int editor;     /* OLC */
-};
 MUD_DATA *mud;
 
 /*
 	telopt.c
 */
 
-int         translate_telopts        ( DESCRIPTOR_DATA *d, unsigned char *src, int srclen, unsigned char *out, int outlen );
-void        announce_support         ( DESCRIPTOR_DATA *d );
-void        unannounce_support       ( DESCRIPTOR_DATA *d );
-int         write_mccp2              ( DESCRIPTOR_DATA *d, char *txt, int length );
-void        send_echo_on             ( DESCRIPTOR_DATA *d );
-void        send_echo_off            ( DESCRIPTOR_DATA *d );
+int translate_telopts(DESCRIPTOR_DATA *d, unsigned char *src, int srclen, unsigned char *out, int outlen);
+
+void announce_support(DESCRIPTOR_DATA *d);
+
+void unannounce_support(DESCRIPTOR_DATA *d);
+
+int write_mccp2(DESCRIPTOR_DATA *d, char *txt, int length);
+
+void send_echo_on(DESCRIPTOR_DATA *d);
+
+void send_echo_off(DESCRIPTOR_DATA *d);
+
 /*
 	mth.c
 */
-void        init_mth                 (void);
-void        init_mth_socket          ( DESCRIPTOR_DATA *d );
-void        uninit_mth_socket        ( DESCRIPTOR_DATA *d );
-void        arachnos_devel           ( char *fmt, ... );
-void        arachnos_mudlist         ( char *fmt, ... );
-void        log_descriptor_printf    ( DESCRIPTOR_DATA *d, char *fmt, ... );
-int         cat_sprintf              (char *dest, const char *fmt, ...);
+void init_mth(void);
+
+void init_mth_socket(DESCRIPTOR_DATA *d);
+
+void uninit_mth_socket(DESCRIPTOR_DATA *d);
+
+void log_descriptor_printf(DESCRIPTOR_DATA *d, char *fmt, ...);
+
+int cat_sprintf(char *dest, const char *fmt, ...);
+
 /*
 	msdp.c
 */
 
-void        init_msdp_table               ( void );
-void        process_msdp_varval           ( DESCRIPTOR_DATA *d, char *var, char *val );
-void        msdp_send_update              ( DESCRIPTOR_DATA *d );
-void        msdp_update_var               ( DESCRIPTOR_DATA *d, char *var, char *fmt, ... );
-void        msdp_update_var_instant       ( DESCRIPTOR_DATA *d, char *var, char *fmt, ... );
+void init_msdp_table(void);
 
-void        msdp_configure_arachnos       ( DESCRIPTOR_DATA *d, int index );
-void        msdp_configure_pluginid       ( DESCRIPTOR_DATA *d, int index );
+void process_msdp_varval(DESCRIPTOR_DATA *d, char *var, char *val);
 
-void        write_msdp_to_descriptor      ( DESCRIPTOR_DATA *d, char *src, int length );
-int         msdp2json                     ( unsigned char *src, int srclen, char *out );
-int         json2msdp                     ( unsigned char *src, int srclen, char *out );
+void msdp_send_update(DESCRIPTOR_DATA *d);
+
+void msdp_update_var(DESCRIPTOR_DATA *d, char *var, char *fmt, ...);
+
+void msdp_update_var_instant(DESCRIPTOR_DATA *d, char *var, char *fmt, ...);
+
+void msdp_configure_arachnos(DESCRIPTOR_DATA *d, int index);
+
+void msdp_configure_pluginid(DESCRIPTOR_DATA *d, int index);
+
+void write_msdp_to_descriptor(DESCRIPTOR_DATA *d, char *src, int length);
+
+int msdp2json(unsigned char *src, int srclen, char *out);
+
+int json2msdp(unsigned char *src, int srclen, char *out);
 
 /*
 	tables.c
@@ -253,27 +196,24 @@ int         json2msdp                     ( unsigned char *src, int srclen, char
 
 extern char *telcmds[];
 
-struct telnet_type
-{
-	char      *name;
-	int       flags;
+struct telnet_type {
+    char *name;
+    int flags;
 };
 
 extern struct telnet_type telnet_table[];
 
-typedef void MSDP_FUN (struct descriptor_data *d, int index);
+typedef void MSDP_FUN(struct descriptor_data *d, int index);
 
-struct msdp_type
-{
-	char     *name;
-	int       flags;
-	MSDP_FUN *fun;
+struct msdp_type {
+    char *name;
+    int flags;
+    MSDP_FUN *fun;
 };
 
-struct msdp_data
-{
-	char     *value;
-	int      flags;
+struct msdp_data {
+    char *value;
+    int flags;
 };
 
 extern struct msdp_type msdp_table[];
@@ -322,13 +262,13 @@ extern struct msdp_type msdp_table[];
 #define     TELOPT_MXP           91   /* used to toggle Mud Extention Protocol */
 #define     TELOPT_GMCP         201
 
-#define	    ENV_IS                0   /* option is... */
-#define	    ENV_SEND              1   /* send option */
-#define	    ENV_INFO              2   /* not sure */
+#define        ENV_IS                0   /* option is... */
+#define        ENV_SEND              1   /* send option */
+#define        ENV_INFO              2   /* not sure */
 
-#define	    ENV_VAR               0
-#define	    ENV_VAL               1
-#define	    ENV_ESC               2
+#define        ENV_VAR               0
+#define        ENV_VAL               1
+#define        ENV_ESC               2
 #define     ENV_USR               3
 
 #define     CHARSET_REQUEST       1
@@ -348,3 +288,75 @@ extern struct msdp_type msdp_table[];
 #define     TELCMD_OK(c)    ((unsigned char) (c) >= xEOF)
 #define     TELCMD(c)       (telcmds[(unsigned char) (c) - xEOF])
 #define     TELOPT(c)       (telnet_table[(unsigned char) (c)].name)
+
+
+
+/*
+	Utility macros.
+*/
+
+#define HAS_BIT(var, bit)       ((var)  & (bit))
+#define SET_BIT(var, bit)    ((var) |= (bit))
+#define DEL_BIT(var, bit)       ((var) &= (~(bit)))
+#define TOG_BIT(var, bit)       ((var) ^= (bit))
+
+/*
+	Update these to use whatever your MUD uses
+*/
+
+#define STRALLOC(point) \
+{ \
+    point = strdup(value); \
+}
+
+#define STRFREE(point) \
+{ \
+    free(point); \
+    point = NULL; \
+}
+
+
+/*
+	Descriptor (channel)
+*/
+/* Descriptor (channel) structure. */
+struct descriptor_data2 {
+    DESCRIPTOR_DATA *next;
+    DESCRIPTOR_DATA *snoop_by;
+    void *character;
+    void *original;
+    MTH_DATA *mth; // MTH 1.5
+    int ansi;
+    char *host;
+    short descriptor;
+    short connected;
+    int fcommand;
+    char inbuf[MAX_INPUT_LENGTH];
+    char incomm[MAX_INPUT_LENGTH];
+    char inlast[MAX_INPUT_LENGTH];
+    int repeat;
+    char *outbuf;
+    int outsize;
+    int outtop;
+    char *showstr_head;
+    char *showstr_point;
+    int lines_written; /* for the pager */
+    void *pEdit;    /* OLC */
+    char **pString; /* OLC */
+    int editor;     /* OLC */
+};
+
+/*
+	mud.c
+*/
+
+void log_printf(char *fmt, ...);
+
+void log_descriptor_printf(DESCRIPTOR_DATA *d, char *fmt, ...);
+
+void descriptor_printf(DESCRIPTOR_DATA *d, char *fmt, ...);
+
+//int         write_to_descriptor(DESCRIPTOR_DATA *d, char *txt, int length);
+int write_to_descriptor(int desc, char *txt, int length);
+
+char *capitalize_all(char *str);
