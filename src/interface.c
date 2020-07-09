@@ -5098,8 +5098,6 @@ dump_users(struct descriptor_data *d, char *user)
 
     if (!d)
         return;
-    }
-
 
     if (!(OkObj(d->player) && d->connected) && tp_secure_who) {
         queue_ansi(d, SYSRED "Login and find out!");
@@ -5230,15 +5228,15 @@ dump_users(struct descriptor_data *d, char *user)
             strcpy(plyrbuf, buf);
         }
         if ((wizwho ? 1
-             : ((dlist->connected
-                 && OkObj(dlist->
-                          player)) ? (tp_who_hides_dark ?
-                                      !((FLAGS(dlist->player) & DARK)
-                                        || (FLAG2(dlist->player) & F2HIDDEN))
-                                      || (OkObj(d->player) && Wiz(d->player))
-                                      || (d->player == dlist->player)
-                                      || (FLAG2(dlist->player) & F2LIGHT) : 1) :
-                0)) && equalstr(user, plyrbuf)) {
+                    : ((dlist->connected
+                        && OkObj(dlist->
+                        player)) ? (tp_who_hides_dark ?
+                                    !((FLAGS(dlist->player) & DARK)
+                                      || (FLAG2(dlist->player) & F2HIDDEN))
+                                    || (OkObj(d->player) && Wiz(d->player))
+                                    || (d->player == dlist->player)
+                                    || (FLAG2(dlist->player) & F2LIGHT) : 1) :
+                       0)) && equalstr(user, plyrbuf)) {
             if ((OkObj(dlist->player)
                  && dlist->connected) ? (FLAG2(dlist->player) & F2IDLE) : 0) {
                 idleplyrs++;
@@ -5269,13 +5267,13 @@ dump_users(struct descriptor_data *d, char *user)
                                               dlist->last_time),
                                 ((dlist->connected
                                   && OkObj(dlist->
-                                           player)) ? ((FLAGS(dlist->
-                                                              player) &
-                                                        INTERACTIVE)
-                                                       ? "*" : " ") : " "),
+                                        player)) ? ((FLAGS(dlist->
+                                        player) &
+                                                     INTERACTIVE)
+                                                    ? "*" : " ") : " "),
                                 SYSCYAN,
                                 GETDOING(dlist->player) ? GETDOING(dlist->
-                                                                   player) :
+                                        player) :
                                 "");
                     } else {
                         sprintf(buf, "%s%s %s%10s%s%s%4s%s\r\n",
@@ -5289,10 +5287,10 @@ dump_users(struct descriptor_data *d, char *user)
                                               dlist->last_time),
                                 ((dlist->connected
                                   && OkObj(dlist->
-                                           player)) ? ((FLAGS(dlist->
-                                                              player) &
-                                                        INTERACTIVE)
-                                                       ? "*" : " ") : " "));
+                                        player)) ? ((FLAGS(dlist->
+                                        player) &
+                                                     INTERACTIVE)
+                                                    ? "*" : " ") : " "));
                     }
                     break;
                 }
@@ -5308,9 +5306,9 @@ dump_users(struct descriptor_data *d, char *user)
                             time_format_2(current_systime - dlist->last_time),
                             ((dlist->connected
                               && OkObj(dlist->
-                                       player)) ? ((FLAGS(dlist->
-                                                          player) & INTERACTIVE)
-                                                   ? "*" : " ") : " "), SYSBLUE,
+                                    player)) ? ((FLAGS(dlist->
+                                    player) & INTERACTIVE)
+                                                ? "*" : " ") : " "), SYSBLUE,
                             (d->connected && OkObj(d->player)
                              && Arch(d->player)) ? dlist->hu->u->user : "",
                             (d->connected && OkObj(d->player)
