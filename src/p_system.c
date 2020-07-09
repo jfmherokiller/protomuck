@@ -88,7 +88,27 @@ prim_setsysparm(PRIM_PROTOTYPE)
     CLEAR(oper1);
     CLEAR(oper2);
 }
+void prim_updatemsdp_var(PRIM_PROTOTYPE) {
+    CHECKOP(2);
+    oper1 = POP();
+    oper2 = POP();
+    if (oper1->type != PROG_STRING)
+    abort_interp("Non-string argument (2)");
+    if (!oper1->data.string)
+    abort_interp("Empty string argument (2)");
+    if (oper2->type != PROG_STRING)
+    abort_interp("Non-string argument (2)");
+    if (!oper2->data.string)
+    abort_interp("Empty string argument (2)");
+    char   tval[BUFFER_LEN];
+    char    tname[BUFFER_LEN];
+    strcpy(tname, oper1->data.string->data);
+    strcpy(tval, oper1->data.string->data);
+    CLEAR(oper1);
+    CLEAR(oper2);
+    msdp_update_var_instant(descrdata_by_descr(fr->descr),tname,"%s",tval);
 
+}
 void
 prim_version(PRIM_PROTOTYPE)
 {
