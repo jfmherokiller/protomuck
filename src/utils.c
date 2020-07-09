@@ -55,3 +55,17 @@ reverse(dbref list)
     }
     return newlist;
 }
+
+
+void StringCopy(char *input, char *output) {
+    size_t newlen = strlen(input);
+    if(strcmp(output,"") != 0) {
+        free(output);
+        output = (char*) malloc((newlen+1)*sizeof(char));
+    } else {
+        output = (char*) malloc((newlen+1)*sizeof(char));
+    }
+
+    strcpy(output,input);
+    //free(input);
+}
