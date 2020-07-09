@@ -4,7 +4,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 if(UNIX)
     set(MAKE_CMD "./configure")
-    list(APPEND MAKE_CMD --with-ssl)
+    list(APPEND MAKE_CMD --with-ssl --enable-ipv6)
     execute_process(COMMAND ${MAKE_CMD} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src)
 endif()
 add_subdirectory(src)
