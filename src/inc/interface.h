@@ -19,7 +19,7 @@
 #  error "USE_SSL defined but ssh.h not found. Make sure you used the --with-ssl configure option."
 # endif
 #endif
-
+#include <mth.h>
 #define SSL_CERT_FILE "data/server.pem"
 #define SSL_KEY_FILE "data/server.pem"
 
@@ -141,6 +141,8 @@ struct telopt {
 
 
 struct descriptor_data {
+    struct descriptor_data  *next;          /* Next descriptor information */
+    struct descriptor_data **prev;          /* Previous descriptor information */
     int                      descriptor;    /* Descriptor number */
     int                      connected;     /* Connected as a player? */
     int                      did_connect;   /* Was connected to a player? */
@@ -172,6 +174,7 @@ struct descriptor_data {
 /*  const char              *hostname;  */  /* String host name */     /* use: hu->h->name */
 /*  const char              *username;  */  /* Descriptor user name */ /* use: hu->u->user */
     struct huinfo           *hu;            /* host/user information, part of the new resolver system */
+    MTH_DATA *mth; // MTH 1.5
     int                      quota;
     int                      commands;      /* Number of commands done */
     int                      linelen;
@@ -182,8 +185,7 @@ struct descriptor_data {
     int                      filter_tab;    /* '\t' -> ' ' conversion. */
     object_flag_type         flags;         /* The descriptor flags */
     dbref                    mufprog;       /* If it is one of the MUF-type ports, then this points to the program. -- UNIMPLEMENTED */
-    struct descriptor_data  *next;          /* Next descriptor information */
-    struct descriptor_data **prev;          /* Previous descriptor information */
+
 #ifdef USE_SSL
     SSL			    *ssl_session;
 #endif
