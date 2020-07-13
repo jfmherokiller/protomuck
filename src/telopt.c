@@ -923,7 +923,7 @@ int process_do_mssp( DESCRIPTOR_DATA *d, unsigned char *src, int srclen )
     cat_sprintf(buffer, "%c%s%c%d", MSSP_VAR, "PLAYERS",           MSSP_VAL,  pcount());
     cat_sprintf(buffer, "%c%s%c%d", MSSP_VAR, "UPTIME",            MSSP_VAL, getUptime());
 
-	cat_sprintf(buffer, "%c%s%c%s", MSSP_VAR, "HOSTNAME",          MSSP_VAL, "flexiblesurvival.com");
+	cat_sprintf(buffer, "%c%s%c%s", MSSP_VAR, "HOSTNAME",          MSSP_VAL, "example.com");
 	cat_sprintf(buffer, "%c%s%c%d", MSSP_VAR, "PORT",              MSSP_VAL, tp_textport);
 
 //	cat_sprintf(buffer, "%c%s%c%s", MSSP_VAR, "CODEBASE",          MSSP_VAL, "ProtoMUCK");
