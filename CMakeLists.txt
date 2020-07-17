@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.0.0)
 project(protoMuck VERSION 0.1.0)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
+option(BUILD_SSL_SUPPORT "Build with ssl support" ON)
+option(BUILD_IPV6_SUPPORT "Build with ipv6 support" ON)
 if(UNIX)
     set(MAKE_CMD "./configure")
     list(APPEND MAKE_CMD --with-ssl --enable-ipv6)

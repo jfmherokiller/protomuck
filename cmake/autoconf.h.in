@@ -1,0 +1,281 @@
+/* inc/autoconf.h.in.  Generated from configure.in by autoheader.  */
+
+/* Defined to enable experimental threading support */
+#cmakedefine EXPERIMENTAL_THREADING
+
+/* Define to 1 if you have the declaration of `tzname', and to 0 if you don't. */
+#cmakedefine HAVE_DECL_TZNAME
+
+/* Define to 1 if you have the <dirent.h> header file, and it defines `DIR'. */
+#cmakedefine HAVE_DIRENT_H
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#cmakedefine HAVE_DLFCN_H
+
+/* Define to 1 if you don't have `vprintf' but do have `_doprnt.' */
+#cmakedefine HAVE_DOPRNT
+
+/* Define to 1 if you have the <errno.h> header file. */
+#cmakedefine HAVE_ERRNO_H
+
+/* Define to 1 if you have the `getrlimit' function. */
+#cmakedefine HAVE_GETRLIMIT
+
+/* Define to 1 if you have the `getrusage' function. */
+#cmakedefine HAVE_GETRUSAGE
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#cmakedefine HAVE_INTTYPES_H
+
+/* Define to 1 if you have the `dl' library (-ldl). */
+#cmakedefine HAVE_LIBDL
+
+/* Define to 1 if you have the `pcre' library (-lpcre). */
+#cmakedefine HAVE_LIBPCRE
+
+/* Define to 1 if you have the `pthread' library (-lpthread). */
+#cmakedefine HAVE_LIBPTHREAD
+
+/* Define to 1 if you have the `util' library (-lutil). */
+#cmakedefine HAVE_LIBUTIL
+
+/* Define to 1 if you have the `z' library (-lz). */
+#cmakedefine HAVE_LIBZ
+
+/* Define to 1 if the system has the type `long long'. */
+#cmakedefine HAVE_LONG_LONG
+
+/* Define to 1 if you have the `mallinfo' function. */
+#cmakedefine HAVE_MALLINFO
+
+/* Define to 1 if you have the <malloc.h> header file. */
+#cmakedefine HAVE_MALLOC_H
+
+/* Define to 1 if you have the <memory.h> header file. */
+#cmakedefine HAVE_MEMORY_H
+
+/* Defined if mysql.h exists. */
+#cmakedefine HAVE_MYSQL_H
+
+/* Define to 1 if you have the <mysql/mysql.h> header file. */
+#cmakedefine HAVE_MYSQL_MYSQL_H
+
+/* Define to 1 if you have the <ndir.h> header file, and it defines `DIR'. */
+#cmakedefine HAVE_NDIR_H
+
+/* Enabled if include/openssl/ssh.h exists. */
+#cmakedefine HAVE_OPENSSL_SSL_H
+
+/* PCRE headers are under pcre dir. */
+#cmakedefine HAVE_PCREINCDIR
+
+/* Define to 1 if you have the <pthread.h> header file. */
+#cmakedefine HAVE_PTHREAD_H
+
+/* Define to 1 if you have the `random' function. */
+#cmakedefine HAVE_RANDOM
+
+/* Define to 1 if you have the `setproctitle' function. */
+#cmakedefine HAVE_SETPROCTITLE
+
+/* Define to 1 if you have the `snprintf' function. */
+#cmakedefine HAVE_SNPRINTF
+
+/* Enabled if include/ssl.h exists. */
+#cmakedefine HAVE_SSL_H
+
+/* Enabled if include/ssl/ssl.h exists. */
+#cmakedefine HAVE_SSL_SSL_H
+
+/* Define to 1 if you have the <stdarg.h> header file. */
+#cmakedefine HAVE_STDARG_H
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#cmakedefine HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#cmakedefine HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#cmakedefine HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#cmakedefine HAVE_STRING_H
+
+/* Define to 1 if `tm_zone' is a member of `struct tm'. */
+#cmakedefine HAVE_STRUCT_TM_TM_ZONE
+
+/* Define to 1 if you have the <sys/dir.h> header file, and it defines `DIR'. */
+#cmakedefine HAVE_SYS_DIR_H
+
+/* Define to 1 if you have the <sys/errno.h> header file. */
+#cmakedefine HAVE_SYS_ERRNO_H
+
+/* Define to 1 if you have the <sys/malloc.h> header file. */
+#cmakedefine HAVE_SYS_MALLOC_H
+
+/* Define to 1 if you have the <sys/ndir.h> header file, and it defines `DIR'. */
+#cmakedefine HAVE_SYS_NDIR_H
+
+/* Define to 1 if you have the <sys/resource.h> header file. */
+#cmakedefine HAVE_SYS_RESOURCE_H
+
+/* Define to 1 if you have the <sys/signal.h> header file. */
+#cmakedefine HAVE_SYS_SIGNAL_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#cmakedefine HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/time.h> header file. */
+#cmakedefine HAVE_SYS_TIME_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#cmakedefine HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <timebits.h> header file. */
+#cmakedefine HAVE_TIMEBITS_H
+
+/* Define to 1 if your `struct tm' has `tm_zone'. Deprecated, use HAVE_STRUCT_TM_TM_ZONE' instead. */
+#cmakedefine HAVE_TM_ZONE
+
+/* Define to 1 if you don't have `tm_zone' but do have the external array `tzname'. */
+#cmakedefine HAVE_TZNAME
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#cmakedefine HAVE_UNISTD_H
+
+/* Define to 1 if you have the <varargs.h> header file. */
+#cmakedefine HAVE_VARARGS_H
+
+/* Define to 1 if you have the `vprintf' function. */
+#cmakedefine HAVE_VPRINTF
+
+/* Define to 1 if you have the `vsnprintf' function. */
+#cmakedefine HAVE_VSNPRINTF
+
+/* Defined to compile ZLIB support */
+#cmakedefine HAVE_ZLIB
+
+/* Defined to compile for ipv6 */
+#cmakedefine IPV6
+
+/* Defined to enable modular support */
+#cmakedefine MODULAR_SUPPORT
+
+/* Defined to DISABLE compression support. */
+#cmakedefine NO_COMPRESS
+
+/* Define to the address where bug reports for this package should be sent. */
+#cmakedefine PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#cmakedefine PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#cmakedefine PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#cmakedefine PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#cmakedefine PACKAGE_URL
+
+/* Define to the version of this package. */
+#cmakedefine PACKAGE_VERSION
+
+/* Defined to enable PCRE support */
+#cmakedefine PCRE_SUPPORT
+
+/* DANGEROUS: Defined to allow file prims and webserver to run as root */
+#cmakedefine PROTO_AS_ROOT
+
+/* Branch of source code in the repo, used by version.h. */
+#cmakedefine PROTO_BRANCH
+
+/* Define as the return type of signal handlers (`int' or `void'). */
+#cmakedefine RETSIGTYPE
+
+/* The size of `int', as computed by sizeof. */
+#cmakedefine SIZEOF_INT
+
+/* The size of `long int', as computed by sizeof. */
+#cmakedefine SIZEOF_LONG_INT
+
+/* Defined to enable MySQL support */
+#cmakedefine SQL_SUPPORT
+
+/* Define to 1 if you have the ANSI C header files. */
+#cmakedefine STDC_HEADERS
+
+/* Defined to enable reslvd support. */
+#cmakedefine SUPPORT_RESLVD
+
+/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
+#cmakedefine TIME_WITH_SYS_TIME
+
+/* Define to 1 if your <sys/time.h> declares `struct tm'. */
+#cmakedefine TM_IN_SYS_TIME
+
+/* The value of the uname -a command. */
+#cmakedefine UNAME_VALUE
+
+/* Defined to enable SSL support. */
+#cmakedefine USE_SSL
+
+/* Enable extensions on AIX 3, Interix.  */
+#ifndef _ALL_SOURCE
+# undef _ALL_SOURCE
+#endif
+/* Enable GNU extensions on systems that have them.  */
+#ifndef _GNU_SOURCE
+# undef _GNU_SOURCE
+#endif
+/* Enable threading extensions on Solaris.  */
+#ifndef _POSIX_PTHREAD_SEMANTICS
+# undef _POSIX_PTHREAD_SEMANTICS
+#endif
+/* Enable extensions on HP NonStop.  */
+#ifndef _TANDEM_SOURCE
+# undef _TANDEM_SOURCE
+#endif
+/* Enable general extensions on Solaris.  */
+#ifndef __EXTENSIONS__
+# undef __EXTENSIONS__
+#endif
+
+
+/* Define to 1 if on MINIX. */
+#cmakedefine _MINIX
+
+/* Define to 2 if the system does not provide POSIX.1 features except with
+   this defined. */
+#cmakedefine _POSIX_1_SOURCE
+
+/* Define to 1 if you need to in order for `stat' and other things to work. */
+#cmakedefine _POSIX_SOURCE
+
+/* Define to empty if `const' does not conform to ANSI C. */
+#cmakedefine const
+
+/* Define to `int' if <sys/types.h> doesn't define. */
+#cmakedefine gid_t
+
+/* Define to `__inline__' or `__inline' if that's what the C compiler calls it, or to nothing if 'inline' is not supported under any name.  */
+#ifndef __cplusplus
+#undef inline
+#endif
+
+/* The base path to the installation for PCRE. Usually /usr. */
+#cmakedefine pcredir
+
+/* Define to `int' if <sys/types.h> does not define. */
+#cmakedefine pid_t
+
+/* Define to `unsigned int' if <sys/types.h> does not define. */
+#cmakedefine size_t
+
+/* The type that holds socket length values on this system. */
+#cmakedefine socklen_t
+
+/* Define to `int' if <sys/types.h> doesn't define. */
+#cmakedefine uid_t
